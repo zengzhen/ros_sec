@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sec)
+project(ros_sec)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -14,13 +14,39 @@ find_package(PCL 1.7 REQUIRED)
 set(OpenCV_INCLUDE_DIRS /usr/local/include;/usr/local/include/opencv)
 set(OpenCV_LIBS /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so)
 
-message ( "\${OpenCV_INCLUDE_DIRS} = ${OpenCV_INCLUDE_DIRS}")
-message ( "\${OpenCV_LIBS} = ${OpenCV_LIBS}")
+# message ( "\${OpenCV_INCLUDE_DIRS} = ${OpenCV_INCLUDE_DIRS}")
+# message ( "\${OpenCV_LIBS} = ${OpenCV_LIBS}")
+# 
+# message( "\${catkin_INCLUDE_DIRS} = ${catkin_INCLUDE_DIRS}" )
+# message( "\${catkin_LIBRARIES} = ${catkin_LIBRARIES}" )
 
-message( "\${catkin_INCLUDE_DIRS} = ${catkin_INCLUDE_DIRS}" )
-message( "\${catkin_LIBRARIES} = ${catkin_LIBRARIES}" )
+set(PCL_BOOST_LIB_DIR /home/kuipers/boost_1_48_0/lib)
+set(PCL_INCLUDE_DIRS /usr/include/pcl-1.7;/usr/include/eigen3;/usr/include/ni;/usr/include/vtk-5.8;/usr/include/qhull)
+set(PCL_LIBRARIES ${PCL_BOOST_LIB_DIR}/libboost_system-mt.so;${PCL_BOOST_LIB_DIR}/libboost_filesystem-mt.so;
+${PCL_BOOST_LIB_DIR}/libboost_thread-mt.so;${PCL_BOOST_LIB_DIR}/libboost_date_time-mt.so;${PCL_BOOST_LIB_DIR}/libboost_iostreams-mt.so;
+${PCL_BOOST_LIB_DIR}/libboost_serialization-mt.so;${PCL_BOOST_LIB_DIR}/libboost_chrono-mt.so;
+/usr/lib/libpcl_common.so;debug;/usr/lib/libpcl_common.so;optimized;
+/usr/lib/libpcl_octree.so;debug;/usr/lib/libpcl_octree.so;/usr/lib/libOpenNI.so;
+vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;
+vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts;optimized;
+/usr/lib/libpcl_io.so;debug;/usr/lib/libpcl_io.so;optimized;/opt/ros/groovy/lib/libflann_cpp_s.a;debug;/opt/ros/groovy/lib/libflann_cpp_s-gd.a;optimized;
+/usr/lib/libpcl_kdtree.so;debug;/usr/lib/libpcl_kdtree.so;optimized;/usr/lib/libpcl_search.so;debug;/usr/lib/libpcl_search.so;optimized;
+/usr/lib/libpcl_sample_consensus.so;debug;/usr/lib/libpcl_sample_consensus.so;optimized;/usr/lib/libpcl_filters.so;debug;
+/usr/lib/libpcl_filters.so;optimized;/usr/lib/libpcl_features.so;debug;/usr/lib/libpcl_features.so;optimized;/usr/lib/libpcl_keypoints.so;debug;
+/usr/lib/libpcl_keypoints.so;optimized;/usr/lib/libqhull.so;debug;/usr/lib/libqhull.so;optimized;/usr/lib/libpcl_surface.so;debug;
+/usr/lib/libpcl_surface.so;optimized;/usr/lib/libpcl_registration.so;debug;/usr/lib/libpcl_registration.so;optimized;/usr/lib/libpcl_ml.so;debug;
+/usr/lib/libpcl_ml.so;optimized;/usr/lib/libpcl_segmentation.so;debug;/usr/lib/libpcl_segmentation.so;optimized;/usr/lib/libpcl_recognition.so;debug;
+/usr/lib/libpcl_recognition.so;optimized;/usr/lib/libpcl_visualization.so;debug;/usr/lib/libpcl_visualization.so;optimized;/usr/lib/libpcl_people.so;debug;
+/usr/lib/libpcl_people.so;optimized;/usr/lib/libpcl_outofcore.so;debug;/usr/lib/libpcl_outofcore.so;optimized;/usr/lib/libpcl_stereo.so;debug;
+/usr/lib/libpcl_stereo.so;optimized;/usr/lib/libpcl_tracking.so;debug;/usr/lib/libpcl_tracking.so;/usr/lib/libqhull.so;debug;/usr/lib/libqhull.so;
+/usr/lib/libOpenNI.so;optimized;/opt/ros/groovy/lib/libflann_cpp_s.a;debug;/opt/ros/groovy/lib/libflann_cpp_s-gd.a;
+vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;
+vtkInfovis;vtkGeovis;vtkViews;vtkCharts
+)
 
-message ( "\${PCL_LIBRARIES} = ${PCL_LIBRARIES}")
+# message( "\${PCL_INCLUDE_DIRS} = ${PCL_INCLUDE_DIRS}" )
+# message ( "\${PCL_LIBRARIES} = ${PCL_LIBRARIES}")
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -92,7 +118,7 @@ message ( "\${PCL_LIBRARIES} = ${PCL_LIBRARIES}")
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #     INCLUDE_DIRS include
-    LIBRARIES sec
+    LIBRARIES ros_sec
     CATKIN_DEPENDS roscpp
     DEPENDS system_lib
 )
