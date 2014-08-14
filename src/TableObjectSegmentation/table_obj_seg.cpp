@@ -171,9 +171,9 @@ namespace TableObject{
         
         std::clock_t t;
         if(TIMING) t=std::clock();
-        _sceneCloud.filterValid();
-        _sceneCloud.filterNoise();
-        _sceneCloud.findPlane(0.005);
+//         _sceneCloud.filterValid();
+//         _sceneCloud.filterNoise();
+//         _sceneCloud.findPlane(0.005);
         if(TIMING){
         	t = clock() - t;
         	std::printf("plane segmentation: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
