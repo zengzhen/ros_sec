@@ -3,7 +3,7 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "view2D.h"
+#include "ros_sec/Visualizer/view2D.h"
 #include <pcl/filters/extract_indices.h>
 #include <iostream>
 

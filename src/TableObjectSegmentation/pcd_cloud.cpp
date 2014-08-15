@@ -3,7 +3,7 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "pcd_cloud.h"
+#include "ros_sec/TableObjectSegmentation/pcd_cloud.h"
 #include <iostream>
 
 #include <pcl/io/pcd_io.h>

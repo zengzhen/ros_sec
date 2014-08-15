@@ -3,7 +3,7 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "mainGraph.h"
+#include "ros_sec/SEC/mainGraph.h"
 #include <fstream>
 
 namespace TableObject{

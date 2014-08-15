@@ -3,10 +3,10 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "trackRigid.h"
+#include "ros_sec/Tracker/trackRigid.h"
 #include <pcl/kdtree/kdtree_flann.h>
-#include "util/util.h"
-#include "Visualizer/view2D.h"
+#include "ros_sec/util/util.h"
+#include "ros_sec/Visualizer/view2D.h"
 
 namespace TableObject{
     

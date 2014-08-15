@@ -3,7 +3,7 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "similarityMeasure.h"
+#include "ros_sec/SEC/similarityMeasure.h"
 
 namespace TableObject{
 

@@ -4,10 +4,10 @@
  */
 
 #include <pcl/common/centroid.h>
-#include "util.h"
+#include "ros_sec/util/util.h"
 #include <pcl/io/pcd_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
-#include "Detector/touchDetector.h"
+#include "ros_sec/Detector/touchDetector.h"
 
 namespace TableObject{
     

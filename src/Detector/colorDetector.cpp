@@ -3,8 +3,8 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "colorDetector.h"
-#include <util/util.h>
+#include "ros_sec/Detector/colorDetector.h"
+#include "ros_sec/util/util.h"
 #include <iostream>
 
 namespace TableObject{

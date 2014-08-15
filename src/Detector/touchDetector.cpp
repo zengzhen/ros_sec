@@ -3,8 +3,8 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "touchDetector.h"
-#include "util/util.h"
+#include "ros_sec/Detector/touchDetector.h"
+#include "ros_sec/util/util.h"
 #include <pcl/segmentation/extract_polygonal_prism_data.h>
 
 namespace TableObject{

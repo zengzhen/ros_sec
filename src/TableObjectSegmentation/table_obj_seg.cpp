@@ -5,13 +5,13 @@
 
 #include <iostream>
 #include <pcl/io/pcd_io.h>
-#include "table_obj_seg.h"
+#include "ros_sec/TableObjectSegmentation/table_obj_seg.h"
 
 #include <pcl/surface/convex_hull.h>
 #include <pcl/segmentation/extract_polygonal_prism_data.h>
 
 // #include <pcl/common/centroid.h>
-#include "util/util.h"
+#include "ros_sec/util/util.h"
 
 #include <time.h>
 

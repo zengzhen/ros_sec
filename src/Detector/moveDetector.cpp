@@ -3,8 +3,8 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "moveDetector.h"
-#include "util/util.h"
+#include "ros_sec/Detector/moveDetector.h"
+#include "ros_sec/util/util.h"
 
 namespace TableObject{
     moveDetector::moveDetector(float threshold)

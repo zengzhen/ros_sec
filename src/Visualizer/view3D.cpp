@@ -3,7 +3,7 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "view3D.h"
+#include "ros_sec/Visualizer/view3D.h"
 #include <string>
 
 namespace TableObject{

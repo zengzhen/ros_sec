@@ -3,7 +3,7 @@
  * \author      Zhen Zeng (zengzhen@umich.edu) 
  */
 
-#include "eventChain.h"
+#include "ros_sec/SEC/eventChain.h"
 #include <fstream>
 #include <string.h>
 
