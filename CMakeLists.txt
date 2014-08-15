@@ -117,7 +117,7 @@ vtkInfovis;vtkGeovis;vtkViews;vtkCharts
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#     INCLUDE_DIRS include
+    INCLUDE_DIRS include
     LIBRARIES ros_sec
     CATKIN_DEPENDS roscpp
     DEPENDS system_lib
@@ -136,13 +136,6 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
     /home/kuipers
     include
-    include/sec
-    include/sec/Detector
-    include/sec/TableObjectSegmentation
-    include/sec/Tracker
-    include/sec/util
-    include/sec/Visualizer
-    include/sec/SEC
 )
 add_definitions(${PCL_DEFINITIONS})
 # link_directories(${PCL_LIBRARIES}  ${OpenCV_LIBS})
@@ -151,7 +144,7 @@ add_definitions(${PCL_DEFINITIONS})
 add_library(pcd_cloud src/TableObjectSegmentation/pcd_cloud.cpp)
 add_library(table_obj_seg src/TableObjectSegmentation/table_obj_seg.cpp)
 
-add_library(touchDetecor src/Detector/touchDetector.cpp)
+add_library(touchDetector src/Detector/touchDetector.cpp)
 add_library(colorDetector src/Detector/colorDetector.cpp)
 add_library(moveDetector src/Detector/moveDetector.cpp)
 
@@ -168,23 +161,71 @@ add_library(mainGraph src/SEC/mainGraph.cpp)
 # add_library(similarityMeasure src/SEC/similarityMeasure.cpp)
 
 ## Declare a cpp executable
-add_executable(extract_sec src/tools/extract_sec.cpp)
+add_library(ros_sec src/tools/extract_sec.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(SEC_node SEC_generate_messages_cpp)
+target_link_libraries(
+    pcd_cloud
+    ${PCL_LIBRARIES}
+)
+
+target_link_libraries(
+    table_obj_seg
+    pcd_cloud
+    view2D
+    util
+)
+
+target_link_libraries(
+    touchDetector
+    pcd_cloud
+    util
+)
+
+target_link_libraries(
+    colorDetector
+    view2D
+)
+
+target_link_libraries(
+    moveDetector
+    util
+)
 
 target_link_libraries(
     view2D
     ${OpenCV_LIBS}
+    /home/kuipers/Kinect/lib/libconvert_rgbd_to_image.so
+)
+
+target_link_libraries(
+    view3D
+    track3D
+)
+
+target_link_libraries(
+    track3D
+    ${PCL_LIBRARIES}
+)
+
+target_link_libraries(
+    trackRigid
+    ${PCL_LIBRARIES}
+)
+
+target_link_libraries(
+    util
+    ${PCL_LIBRARIES}
 )
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(extract_sec
+target_link_libraries(ros_sec
     ${catkin_LIBRARIES}
     ${OpenCV_LIBS}
     ${PCL_LIBRARIES}
-    /home/kuipers/Kinect/lib/libconvert_rgbd_to_image.so
+    
     table_obj_seg
     pcd_cloud
     trackRigid
@@ -192,7 +233,7 @@ target_link_libraries(extract_sec
     view3D
     util
     colorDetector
-    touchDetecor
+    touchDetector
     moveDetector
     mainGraph
 )
