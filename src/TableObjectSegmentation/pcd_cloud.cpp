@@ -9,7 +9,10 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/filters/passthrough.h>
 #include <pcl/filters/statistical_outlier_removal.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/approximate_voxel_grid.h>
 
+#include <time.h>
 
 namespace TableObject{
     pcdCloud::pcdCloud()
@@ -34,6 +37,14 @@ namespace TableObject{
         } else
         {
             std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+            //downsample the point cloud
+            std::clock_t t = std::clock();
+            pcl::VoxelGrid<RefPointType> sampler;
+            sampler.setInputCloud(_cloud);
+            sampler.setLeafSize(0.005f, 0.005f, 0.005f);
+            sampler.filter(*_cloud);
+            std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+            t = std::clock() - t;
         }
     }
     
@@ -47,7 +58,7 @@ namespace TableObject{
         std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
     }
     
-    void pcdCloud::resetCloud(const std::string& pcd_file)
+    void pcdCloud::resetCloud(const std::string& pcd_file, bool downsample)
     {
         if (pcl::io::loadPCDFile<RefPointType> (pcd_file, *_cloud) == -1) //* load the file
         {
@@ -56,6 +67,19 @@ namespace TableObject{
         } else
         {
             std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+            if(downsample) 
+            {
+                //downsample the point cloud
+                std::clock_t t = std::clock();
+                pcl::VoxelGrid<RefPointType> sampler;
+                sampler.setInputCloud(_cloud);
+                sampler.setLeafSize(0.0001f, 0.0001f, 0.0001f);
+                sampler.filter(*_cloud);
+                
+                std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+                t = std::clock() - t;
+                std::printf("downsample cloud: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
+            }
         }
         
         _removedIndices.reset(new std::vector<int>);

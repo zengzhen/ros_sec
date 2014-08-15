@@ -49,9 +49,9 @@ namespace TableObject{
     _tableTopCloud(new Cloud),
     _cloud_objects(new Cloud){};
     
-    void Segmentation::resetCloud(const std::string& pcd_file)
+    void Segmentation::resetCloud(const std::string& pcd_file, bool downsample)
     {
-        _sceneCloud.resetCloud(pcd_file);
+        _sceneCloud.resetCloud(pcd_file, downsample);
     }
 
     void Segmentation::resetCloud(CloudConstPtr cloud)

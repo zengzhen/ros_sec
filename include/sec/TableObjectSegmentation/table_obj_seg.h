@@ -29,7 +29,7 @@ namespace TableObject
         Segmentation(CloudConstPtr cloud);
         
         /** \brief set scene cloud to pcd file */
-        void resetCloud(const std::string & pcd_file);
+        void resetCloud(const std::string & pcd_file, bool downsample);
         
         /** \brief set scene cloud */
         void resetCloud(CloudConstPtr cloud);

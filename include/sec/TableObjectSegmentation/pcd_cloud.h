@@ -48,8 +48,9 @@ namespace TableObject{
         
         /** \brief set cloud to pcd file
          *  \param[in] pcd_file path to .pcd file
+         *  \param[in] downsample downsample the point cloud or not
          */
-        void resetCloud(const std::string & pcd_file);
+        void resetCloud(const std::string & pcd_file, bool downsample);
         
         
         /** \brief set cloud
@@ -82,11 +83,11 @@ namespace TableObject{
          */
         void extract(CloudPtr output,  pcl::IndicesPtr inliers, bool invert);
         
-        /** Extract points to a new unorganized point cloud, optionally output removed indices
+        /** Extract points to a new organized point cloud, optionally output removed indices
          * \param[out] output extracted point cloud
          * \param[in] inliers set indices of inliers of output point cloud
          * \param[in] invert (default)false: extract inliers; true: extract outliers
-         * \param[in] outliers (optional)get removed indices
+         * \param[out] outliers (optional)get removed indices
          */
         void extract(CloudPtr output,  pcl::IndicesPtr inliers, pcl::IndicesPtr outliers, bool invert);
         
