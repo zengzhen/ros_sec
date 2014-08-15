@@ -157,11 +157,13 @@ add_library(trackRigid src/Tracker/trackRigid.cpp)
 add_library(util src/util/util.cpp)
 
 add_library(mainGraph src/SEC/mainGraph.cpp)
+
+add_library(ros_sec src/tools/extract_sec.cpp) # so that ros_sec can be found by find_package, we are not really using ros_sec.so, but the include path
 # add_library(eventChain src/SEC/eventChain.cpp)
 # add_library(similarityMeasure src/SEC/similarityMeasure.cpp)
 
 ## Declare a cpp executable
-add_library(ros_sec src/tools/extract_sec.cpp)
+# add_library(extract_sec src/tools/extract_sec.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
