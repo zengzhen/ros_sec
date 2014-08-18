@@ -176,19 +176,19 @@ main (int argc, char** argv)
 //             f1_indices.indices = *color_rem.getIndices();
 
             //opencv color filtering for fingertip_1
-//             finger1Detector.setInputCloud(cloud_objects, clusters);
-//             finger1Detector.filter(f1_indices,cloud_finger1);
+            finger1Detector.setInputCloud(cloud_objects, clusters);
+            finger1Detector.filter(f1_indices,cloud_finger1);
             t = std::clock() - t;
             ROS_INFO("Finger 1 detection: %f seconds", ((float)t)/CLOCKS_PER_SEC);
             finger1Detector.showDetectedCloud(result_viewer, "finger1");
             
             //opencv color filtering for fingertip_2
             t = std::clock();
-//             finger2Detector.setInputCloud(cloud_objects, clusters);
-//             finger2Detector.filter(f2_indices,cloud_finger2);
+            finger2Detector.setInputCloud(cloud_objects, clusters);
+            finger2Detector.filter(f2_indices,cloud_finger2);
             t = std::clock() - t;
             ROS_INFO("finger 2 detection: %f seconds", ((float)t)/CLOCKS_PER_SEC);
-//             finger2Detector.showDetectedCloud(result_viewer, "finger2");
+            finger2Detector.showDetectedCloud(result_viewer, "finger2");
             
             //opencv color filtering for block
 //             cupDetector.setInputCloud(cloud_objects, clusters);
@@ -196,19 +196,19 @@ main (int argc, char** argv)
 //             cupDetector.showDetectedCloud(result_viewer, "block");
             
             // remove hand (include cluster that contains the detected fingertips and also the other clusters that are touching the cluster)
-//             std::vector<int> hand_arm1=TableObject::findHand(cloud_objects, clusters, f1_indices);
+            std::vector<int> hand_arm1=TableObject::findHand(cloud_objects, clusters, f1_indices);
             
-//             for(int i=hand_arm1.size()-1; i>=0; i--)
-//             {
-//                 clusters.erase(clusters.begin()+hand_arm1[i]);
-//                 std::cout << "removing hand_arm : cluster index = " << hand_arm1[i] << std::endl;
-//             }
-//             std::vector<int> hand_arm2=TableObject::findHand(cloud_objects, clusters, f2_indices);
-//             for(int i=hand_arm2.size()-1; i>=0; i--)
-//             {
-//                 clusters.erase(clusters.begin()+hand_arm2[i]);
-//                 std::cout << "removing hand_arm : cluster index = " << hand_arm2[i] << std::endl;
-//             }
+            for(int i=hand_arm1.size()-1; i>=0; i--)
+            {
+                clusters.erase(clusters.begin()+hand_arm1[i]);
+                std::cout << "removing hand_arm : cluster index = " << hand_arm1[i] << std::endl;
+            }
+            std::vector<int> hand_arm2=TableObject::findHand(cloud_objects, clusters, f2_indices);
+            for(int i=hand_arm2.size()-1; i>=0; i--)
+            {
+                clusters.erase(clusters.begin()+hand_arm2[i]);
+                std::cout << "removing hand_arm : cluster index = " << hand_arm2[i] << std::endl;
+            }
             
             /***************************************
              *  Tracking initialization
@@ -223,8 +223,8 @@ main (int argc, char** argv)
              ***************************************/
             
             std::vector<pcl::PointIndices> touch_clusters=clusters;
-//             touch_clusters.push_back(f1_indices);
-//             touch_clusters.push_back(f2_indices);
+            touch_clusters.push_back(f1_indices);
+            touch_clusters.push_back(f2_indices);
             std::cout << "touch_clusters size = " << touch_clusters.size() << std::endl;
             // touch detection between each pair of objects (including fingertips, tabletop objects and tabletop)
             for(int i=0; i<touch_clusters.size(); i++)
@@ -250,11 +250,11 @@ main (int argc, char** argv)
 //                     touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
                     
                     // relational scene graph -> main graph
-//                     if(touch) {
-//                         mainGraph.addInitialRelationalGraph(2);
-//                     }else{
-//                         mainGraph.addInitialRelationalGraph(0);
-//                     }
+                    if(touch) {
+                        mainGraph.addInitialRelationalGraph(2);
+                    }else{
+                        mainGraph.addInitialRelationalGraph(0);
+                    }
                 }
                 
                 // touch detection between each objects and tabletop
@@ -265,7 +265,7 @@ main (int argc, char** argv)
                 touch=touchDetector.detectTableTouch(object_i, coefficients);
                 t = std::clock() - t;
                 ROS_INFO("touch detection: %f seconds", ((float)t)/CLOCKS_PER_SEC);
-                touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
+//                 touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
                 
                 // relational scene graph -> main graph
                 if(touch) {
@@ -302,7 +302,7 @@ main (int argc, char** argv)
             /***************************************
              *  object cloud extraction
              ***************************************/
-            tableObjSeg.resetCloud(filename_pcd, true);
+            tableObjSeg.resetCloud(filename_pcd, false);
             std::clock_t t = std::clock();
             tableObjSeg.seg(cloud_hull,false);
             tableObjSeg.getObjects(cloud_objects, clusters);
@@ -317,19 +317,19 @@ main (int argc, char** argv)
              ***************************************/
             //opencv color filtering for fingertip_1
             t = std::clock();
-//             finger1Detector.setInputCloud(cloud_objects, clusters);
-//             finger1Detector.filter(f1_indices,cloud_finger1);
+            finger1Detector.setInputCloud(cloud_objects, clusters);
+            finger1Detector.filter(f1_indices,cloud_finger1);
             t = std::clock() - t;
             ROS_INFO("finger 1 detection: %f seconds", ((float)t)/CLOCKS_PER_SEC);
-//             finger1Detector.showDetectedCloud(result_viewer, "finger1");
+            finger1Detector.showDetectedCloud(result_viewer, "finger1");
 
             //opencv color filtering for fingertip_2
             t = std::clock();
-//             finger2Detector.setInputCloud(cloud_objects, clusters);
-//             finger2Detector.filter(f2_indices,cloud_finger2);
+            finger2Detector.setInputCloud(cloud_objects, clusters);
+            finger2Detector.filter(f2_indices,cloud_finger2);
             t = std::clock() - t;
             ROS_INFO("finger 2 detection: %f seconds", ((float)t)/CLOCKS_PER_SEC);
-//             finger2Detector.showDetectedCloud(result_viewer, "finger2");
+            finger2Detector.showDetectedCloud(result_viewer, "finger2");
             
             /***************************************
              *  Tracking objects
@@ -350,8 +350,8 @@ main (int argc, char** argv)
              *  Touch detection
              ***************************************/
             std::vector<pcl::PointIndices> touch_clusters=tracked_clusters;
-//             touch_clusters.push_back(f1_indices);
-//             touch_clusters.push_back(f2_indices);
+            touch_clusters.push_back(f1_indices);
+            touch_clusters.push_back(f2_indices);
             std::cout << "touch_clusters size = " << touch_clusters.size() << std::endl;
             // touch detection between each pair of objects (including fingertips, tabletop objects and tabletop)
             for(int i=0; i<touch_clusters.size(); i++)
