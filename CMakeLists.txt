@@ -20,29 +20,29 @@ set(OpenCV_LIBS /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_con
 # message( "\${catkin_INCLUDE_DIRS} = ${catkin_INCLUDE_DIRS}" )
 # message( "\${catkin_LIBRARIES} = ${catkin_LIBRARIES}" )
 
-set(PCL_BOOST_LIB_DIR /home/kuipers/boost_1_48_0/lib)
-set(PCL_INCLUDE_DIRS /usr/include/pcl-1.7;/usr/include/eigen3;/usr/include/ni;/usr/include/vtk-5.8;/usr/include/qhull)
-set(PCL_LIBRARIES ${PCL_BOOST_LIB_DIR}/libboost_system-mt.so;${PCL_BOOST_LIB_DIR}/libboost_filesystem-mt.so;
-${PCL_BOOST_LIB_DIR}/libboost_thread-mt.so;${PCL_BOOST_LIB_DIR}/libboost_date_time-mt.so;${PCL_BOOST_LIB_DIR}/libboost_iostreams-mt.so;
-${PCL_BOOST_LIB_DIR}/libboost_serialization-mt.so;${PCL_BOOST_LIB_DIR}/libboost_chrono-mt.so;
-/usr/lib/libpcl_common.so;debug;/usr/lib/libpcl_common.so;optimized;
-/usr/lib/libpcl_octree.so;debug;/usr/lib/libpcl_octree.so;/usr/lib/libOpenNI.so;
-vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;
-vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts;optimized;
-/usr/lib/libpcl_io.so;debug;/usr/lib/libpcl_io.so;optimized;/opt/ros/groovy/lib/libflann_cpp_s.a;debug;/opt/ros/groovy/lib/libflann_cpp_s-gd.a;optimized;
-/usr/lib/libpcl_kdtree.so;debug;/usr/lib/libpcl_kdtree.so;optimized;/usr/lib/libpcl_search.so;debug;/usr/lib/libpcl_search.so;optimized;
-/usr/lib/libpcl_sample_consensus.so;debug;/usr/lib/libpcl_sample_consensus.so;optimized;/usr/lib/libpcl_filters.so;debug;
-/usr/lib/libpcl_filters.so;optimized;/usr/lib/libpcl_features.so;debug;/usr/lib/libpcl_features.so;optimized;/usr/lib/libpcl_keypoints.so;debug;
-/usr/lib/libpcl_keypoints.so;optimized;/usr/lib/libqhull.so;debug;/usr/lib/libqhull.so;optimized;/usr/lib/libpcl_surface.so;debug;
-/usr/lib/libpcl_surface.so;optimized;/usr/lib/libpcl_registration.so;debug;/usr/lib/libpcl_registration.so;optimized;/usr/lib/libpcl_ml.so;debug;
-/usr/lib/libpcl_ml.so;optimized;/usr/lib/libpcl_segmentation.so;debug;/usr/lib/libpcl_segmentation.so;optimized;/usr/lib/libpcl_recognition.so;debug;
-/usr/lib/libpcl_recognition.so;optimized;/usr/lib/libpcl_visualization.so;debug;/usr/lib/libpcl_visualization.so;optimized;/usr/lib/libpcl_people.so;debug;
-/usr/lib/libpcl_people.so;optimized;/usr/lib/libpcl_outofcore.so;debug;/usr/lib/libpcl_outofcore.so;optimized;/usr/lib/libpcl_stereo.so;debug;
-/usr/lib/libpcl_stereo.so;optimized;/usr/lib/libpcl_tracking.so;debug;/usr/lib/libpcl_tracking.so;/usr/lib/libqhull.so;debug;/usr/lib/libqhull.so;
-/usr/lib/libOpenNI.so;optimized;/opt/ros/groovy/lib/libflann_cpp_s.a;debug;/opt/ros/groovy/lib/libflann_cpp_s-gd.a;
-vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;
-vtkInfovis;vtkGeovis;vtkViews;vtkCharts
-)
+# set(PCL_BOOST_LIB_DIR /home/zhen/Documents/boost_1_48_0/lib)
+# set(PCL_INCLUDE_DIRS /usr/include/pcl-1.7;/usr/include/eigen3;/usr/include/ni;/usr/include/vtk-5.8;/usr/include/qhull)
+# set(PCL_LIBRARIES ${PCL_BOOST_LIB_DIR}/libboost_system-mt.so;${PCL_BOOST_LIB_DIR}/libboost_filesystem-mt.so;
+# ${PCL_BOOST_LIB_DIR}/libboost_thread-mt.so;${PCL_BOOST_LIB_DIR}/libboost_date_time-mt.so;${PCL_BOOST_LIB_DIR}/libboost_iostreams-mt.so;
+# ${PCL_BOOST_LIB_DIR}/libboost_serialization-mt.so;${PCL_BOOST_LIB_DIR}/libboost_chrono-mt.so;
+# /usr/lib/libpcl_common.so;debug;/usr/lib/libpcl_common.so;optimized;
+# /usr/lib/libpcl_octree.so;debug;/usr/lib/libpcl_octree.so;/usr/lib/libOpenNI.so;
+# vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;
+# vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts;optimized;
+# /usr/lib/libpcl_io.so;debug;/usr/lib/libpcl_io.so;optimized;/opt/ros/groovy/lib/libflann_cpp_s.a;debug;/opt/ros/groovy/lib/libflann_cpp_s-gd.a;optimized;
+# /usr/lib/libpcl_kdtree.so;debug;/usr/lib/libpcl_kdtree.so;optimized;/usr/lib/libpcl_search.so;debug;/usr/lib/libpcl_search.so;optimized;
+# /usr/lib/libpcl_sample_consensus.so;debug;/usr/lib/libpcl_sample_consensus.so;optimized;/usr/lib/libpcl_filters.so;debug;
+# /usr/lib/libpcl_filters.so;optimized;/usr/lib/libpcl_features.so;debug;/usr/lib/libpcl_features.so;optimized;/usr/lib/libpcl_keypoints.so;debug;
+# /usr/lib/libpcl_keypoints.so;optimized;/usr/lib/libqhull.so;debug;/usr/lib/libqhull.so;optimized;/usr/lib/libpcl_surface.so;debug;
+# /usr/lib/libpcl_surface.so;optimized;/usr/lib/libpcl_registration.so;debug;/usr/lib/libpcl_registration.so;optimized;/usr/lib/libpcl_ml.so;debug;
+# /usr/lib/libpcl_ml.so;optimized;/usr/lib/libpcl_segmentation.so;debug;/usr/lib/libpcl_segmentation.so;optimized;/usr/lib/libpcl_recognition.so;debug;
+# /usr/lib/libpcl_recognition.so;optimized;/usr/lib/libpcl_visualization.so;debug;/usr/lib/libpcl_visualization.so;optimized;/usr/lib/libpcl_people.so;debug;
+# /usr/lib/libpcl_people.so;optimized;/usr/lib/libpcl_outofcore.so;debug;/usr/lib/libpcl_outofcore.so;optimized;/usr/lib/libpcl_stereo.so;debug;
+# /usr/lib/libpcl_stereo.so;optimized;/usr/lib/libpcl_tracking.so;debug;/usr/lib/libpcl_tracking.so;/usr/lib/libqhull.so;debug;/usr/lib/libqhull.so;
+# /usr/lib/libOpenNI.so;optimized;/opt/ros/groovy/lib/libflann_cpp_s.a;debug;/opt/ros/groovy/lib/libflann_cpp_s-gd.a;
+# vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;
+# vtkInfovis;vtkGeovis;vtkViews;vtkCharts
+# )
 
 # message( "\${PCL_INCLUDE_DIRS} = ${PCL_INCLUDE_DIRS}" )
 # message ( "\${PCL_LIBRARIES} = ${PCL_LIBRARIES}")
@@ -134,7 +134,7 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
     ${PCL_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
-    /home/kuipers
+    /home/zhen/Documents
     include
 )
 add_definitions(${PCL_DEFINITIONS})
@@ -163,7 +163,7 @@ add_library(ros_sec src/tools/extract_sec.cpp) # so that ros_sec can be found by
 # add_library(similarityMeasure src/SEC/similarityMeasure.cpp)
 
 ## Declare a cpp executable
-# add_library(extract_sec src/tools/extract_sec.cpp)
+# add_executable(extract_sec src/tools/extract_sec.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -198,7 +198,7 @@ target_link_libraries(
 target_link_libraries(
     view2D
     ${OpenCV_LIBS}
-    /home/kuipers/Kinect/lib/libconvert_rgbd_to_image.so
+    /home/zhen/Documents/Kinect/lib/libconvert_rgbd_to_image.so
 )
 
 target_link_libraries(
