@@ -183,7 +183,6 @@ target_link_libraries(
 target_link_libraries(
     touchDetector
     pcd_cloud
-    util
 )
 
 target_link_libraries(
@@ -219,6 +218,7 @@ target_link_libraries(
 
 target_link_libraries(
     util
+    touchDetector
     ${PCL_LIBRARIES}
 )
 
