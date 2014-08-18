@@ -37,6 +37,11 @@ namespace TableObject
         /** \brief set threshold for size of extracted object */
         void setThreshold(int threshold);
         
+        /** \brief segment tabletop and get convex hull for the tabletop plane
+         *  \param[in] view2D (default)true if display intermediate results with 2D images; false else.
+         */
+        void seg_hull(bool view2D=true);
+        
         /** \brief segment object from tabletop 
          *  \param[in] view2D (default)true if display intermediate results with 2D images; false else.
          */

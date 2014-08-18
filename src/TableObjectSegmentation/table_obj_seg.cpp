@@ -65,6 +65,66 @@ namespace TableObject{
         _threshold=threshold;
     }
     
+    void Segmentation::seg_hull(bool view2D)
+    {
+        if(view2D)
+        {
+            _viewer2D.viewImage(_sceneCloud.getCloud(), "frame");
+            _viewer2D.writeImage("frame.png");
+        }
+        
+        std::clock_t t;
+        if(TIMING) t = clock();
+        _sceneCloud.filterValid();
+        _sceneCloud.filterNoise();
+        _sceneCloud.findPlane(0.01);
+        _sceneCloud.getPlaneCoefficients(_coefficients);
+        if(TIMING){
+            t = clock() - t;
+            std::printf("plane segmentation: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
+        }
+            
+        // extract the inliers of the estimated plane
+        _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
+        if(view2D)
+        {
+            _viewer2D.viewImage(_inPlaneCloud, "plane");
+            _viewer2D.writeImage("plane.png");
+        }
+        
+        // filter small groups of points first before region growing
+        pcl::IndicesPtr inliers(new std::vector<int>);
+        _sceneCloud.getPlaneInliers(inliers);
+        TableObject::pcdCloud inPlanePcdCloud(_inPlaneCloud);
+        inPlanePcdCloud.setIndices(inliers);
+        inPlanePcdCloud.filterNoise();
+        
+        //region grow
+        inPlanePcdCloud.regionGrow(false);
+        
+        //get largest cluster as table top
+        pcl::PointIndices::Ptr plane_indices(new pcl::PointIndices);
+        _tableTopCloud.reset(new Cloud);
+        inPlanePcdCloud.getMaxCluster(plane_indices, _tableTopCloud);
+        if(view2D)
+        {
+            _viewer2D.viewImage(_tableTopCloud, "tabletop");
+            _viewer2D.writeImage("tabletop.png");
+        }
+        
+        // Create a Convex Hull representation of the projected inliers
+        pcl::ConvexHull<RefPointType> chull;
+        chull.setInputCloud (_tableTopCloud);
+        chull.setIndices(plane_indices);
+        chull.reconstruct (*_cloud_hull);
+        
+        if(VERBOSE)
+        {
+            std::cout << "Convex hull has dimemsion of " << chull.getDimension() << std::endl;
+            std::cout << "Convex hull has " << _cloud_hull->points.size () << " valid data points." << std::endl;
+        }
+    }
+    
     void Segmentation::seg(bool view2D)
     {
         if(view2D)
