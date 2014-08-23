@@ -24,7 +24,7 @@
 *~
 
 # IDE file
-*.kdev4
+*.kdev4*
 
 # Doxygen file
 Doxygen/
