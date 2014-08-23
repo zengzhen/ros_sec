@@ -76,7 +76,7 @@ namespace TableObject{
         std::clock_t t;
         if(TIMING) t = clock();
         _sceneCloud.filterValid();
-        _sceneCloud.filterNoise();
+//         _sceneCloud.filterNoise();
         _sceneCloud.findPlane(0.01);
         _sceneCloud.getPlaneCoefficients(_coefficients);
         if(TIMING){
@@ -97,7 +97,7 @@ namespace TableObject{
         _sceneCloud.getPlaneInliers(inliers);
         TableObject::pcdCloud inPlanePcdCloud(_inPlaneCloud);
         inPlanePcdCloud.setIndices(inliers);
-        inPlanePcdCloud.filterNoise();
+//         inPlanePcdCloud.filterNoise();
         
         //region grow
         inPlanePcdCloud.regionGrow(false);
@@ -127,17 +127,11 @@ namespace TableObject{
     
     void Segmentation::seg(bool view2D)
     {
-        if(view2D)
-        {
-            _viewer2D.viewImage(_sceneCloud.getCloud(), "frame");
-            _viewer2D.writeImage("frame.png");
-        }
-        
         std::clock_t t;
         if(TIMING) t = clock();
         _sceneCloud.filterValid();
-        _sceneCloud.filterNoise();
-        _sceneCloud.findPlane(0.01);
+//         _sceneCloud.filterNoise();
+        _sceneCloud.findPlane(0.02);
         _sceneCloud.getPlaneCoefficients(_coefficients);
         if(TIMING){
         	t = clock() - t;
@@ -148,8 +142,12 @@ namespace TableObject{
         _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
         if(view2D)
         {
+            _viewer2D.viewImage(_sceneCloud.getCloud(), "frame");
+            _viewer2D.writeImage("frame.png");
             _viewer2D.viewImage(_inPlaneCloud, "plane");
             _viewer2D.writeImage("plane.png");
+            _viewer2D.viewImage(_outPlaneCloud, "out_plane");
+            _viewer2D.writeImage("out_plane.png");
         }
         
         // filter small groups of points first before region growing
@@ -157,7 +155,7 @@ namespace TableObject{
         _sceneCloud.getPlaneInliers(inliers);
         TableObject::pcdCloud inPlanePcdCloud(_inPlaneCloud);
         inPlanePcdCloud.setIndices(inliers);
-        inPlanePcdCloud.filterNoise();
+//         inPlanePcdCloud.filterNoise();
         
         //region grow
         inPlanePcdCloud.regionGrow(false);
@@ -188,7 +186,7 @@ namespace TableObject{
         pcl::ExtractPolygonalPrismData<RefPointType> prism;
         prism.setInputCloud(_outPlaneCloud);
         prism.setInputPlanarHull(_cloud_hull);
-        prism.setHeightLimits(0.0, 0.5);
+        prism.setHeightLimits(0, 0.5);
         pcl::PointIndices::Ptr output (new pcl::PointIndices);
         prism.segment(*output);
         
@@ -211,7 +209,7 @@ namespace TableObject{
         //filter noise in extracted _cloud_objects
         TableObject::pcdCloud objectsPcdCloud(_cloud_objects);
         objectsPcdCloud.setIndices(*output);
-        objectsPcdCloud.filterNoise();
+//         objectsPcdCloud.filterNoise();
         objectsPcdCloud.regionGrow(false);
         objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
 //         prune();
@@ -231,9 +229,9 @@ namespace TableObject{
         
         std::clock_t t;
         if(TIMING) t=std::clock();
-        _sceneCloud.filterValid();
-        _sceneCloud.filterNoise();
-        _sceneCloud.findPlane(0.005);
+//         _sceneCloud.filterValid();
+//         _sceneCloud.filterNoise();
+//         _sceneCloud.findPlane(0.005);
         if(TIMING){
         	t = clock() - t;
         	std::printf("plane segmentation: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
@@ -241,23 +239,23 @@ namespace TableObject{
             
         if(TIMING) t = std::clock();
         // extract the inliers of the estimated plane
-        _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
+//         _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
         if(view2D)
             _viewer2D.viewImage(_inPlaneCloud, "plane");
         
         // get point clouds within planar prism
         pcl::ExtractPolygonalPrismData<RefPointType> prism;
-        prism.setInputCloud(_outPlaneCloud);
-//         prism.setInputCloud(_sceneCloud.getCloud());
+//         prism.setInputCloud(_outPlaneCloud);
+        prism.setInputCloud(_sceneCloud.getCloud());
         prism.setInputPlanarHull(_cloud_hull);
-        prism.setHeightLimits(0.0, 0.5);
+        prism.setHeightLimits(0.005, 0.5);
         pcl::PointIndices::Ptr output (new pcl::PointIndices);
         prism.segment(*output);
         
         // extract object clouds
         pcl::ExtractIndices<RefPointType> extract;
-        extract.setInputCloud (_outPlaneCloud);
-//         extract.setInputCloud(_sceneCloud.getCloud());
+//         extract.setInputCloud (_outPlaneCloud);
+        extract.setInputCloud(_sceneCloud.getCloud());
         extract.setIndices (output);
         extract.setKeepOrganized(true);
         extract.setNegative (false);
