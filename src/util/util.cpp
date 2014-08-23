@@ -74,7 +74,7 @@ namespace TableObject{
                 kdtree.radiusSearch (searchPoint, radius, pointIdxRadiusSearch, pointRadiusSquaredDistance);
                 overlap_ratio = (float)pointIdxRadiusSearch.size()/input_clusters[i].indices.size();
                 overlap_within_new_cluster = (float)pointIdxRadiusSearch.size()/target_clusters[j].indices.size();
-                if( overlap_ratio > 0.0f)
+                if( overlap_ratio > 0.2f)
                 {
                     link_index_i.push_back(j);
                     overlap_ratio_i.push_back(overlap_ratio);
