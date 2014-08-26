@@ -131,7 +131,7 @@ namespace TableObject{
         if(TIMING) t = clock();
         _sceneCloud.filterValid();
 //         _sceneCloud.filterNoise();
-        _sceneCloud.findPlane(0.02);
+        _sceneCloud.findPlane(0.01);
         _sceneCloud.getPlaneCoefficients(_coefficients);
         if(TIMING){
         	t = clock() - t;
