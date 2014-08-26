@@ -209,7 +209,7 @@ namespace TableObject{
         //filter noise in extracted _cloud_objects
         TableObject::pcdCloud objectsPcdCloud(_cloud_objects);
         objectsPcdCloud.setIndices(*output);
-//         objectsPcdCloud.filterNoise();
+        objectsPcdCloud.filterNoise();
         objectsPcdCloud.regionGrow(false);
         objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
 //         prune();
