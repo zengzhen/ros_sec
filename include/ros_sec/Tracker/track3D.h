@@ -78,7 +78,7 @@ namespace TableObject{
         /** Get tracked cloud
          *  \param[out] tracked_cloud pointer to tracked cloud
          */
-        void getTrackedCloud(CloudPtr tracked_cloud);
+        void getTrackedCloud(CloudPtr& tracked_cloud);
         
         /** Visualize tracked cloud
          *  \param[in] viewer pcl visualizer

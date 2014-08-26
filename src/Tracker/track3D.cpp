@@ -70,7 +70,7 @@ namespace TableObject{
         transformation.translation () += _offset;
     }
     
-    void track3D::getTrackedCloud(CloudPtr tracked_cloud)
+    void track3D::getTrackedCloud(CloudPtr& tracked_cloud)
     {
         tracked_cloud = _tracked_cloud;
     }
