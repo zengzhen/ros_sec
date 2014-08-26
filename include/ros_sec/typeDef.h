@@ -17,6 +17,7 @@ extern bool DEBUG_COLOR;
 typedef pcl::PointXYZRGBA RefPointType;
 typedef pcl::tracking::ParticleXYZRPY ParticleT;
 typedef pcl::tracking::ParticleFilterTracker<RefPointType, ParticleT> ParticleFilter;
+typedef pcl::tracking::ParticleFilterTracker<pcl::PointXYZRGBNormal, ParticleT> ParticleFilterWN;
 typedef pcl::PointCloud<RefPointType> Cloud;
 typedef Cloud::Ptr CloudPtr;
 typedef const CloudPtr CloudConstPtr;
