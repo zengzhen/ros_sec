@@ -63,9 +63,10 @@ namespace TableObject{
     /** \brief extract input_cloud point indices as given to unorganzied output_cloud
     *  \param[in] input_cloud source cloud data (size: height * width)
     *  \param[in] indices indices of points to be copied
+    *  \param[in] keep_organized true: size(output_cloud)=size(intput_cloud); false: size(output_cloud)=size(indices)
     *  \param[out] output_cloud destination cloud data (size: cluster_indices size * 1)
     */
-    void convertCloud(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& input_cloud, const std::vector<pcl::PointIndices>& indices, const pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& output_cloud);
+    void convertCloud(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& input_cloud, const std::vector<pcl::PointIndices>& indices, const pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& output_cloud, bool keep_organized);
     
     /** \brief extract input_cloud point indices as given to unorganzied output_cloud
     *  \param[in] input_cloud source cloud data (size: height * width)

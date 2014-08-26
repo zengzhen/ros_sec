@@ -237,45 +237,47 @@ namespace TableObject{
     }
 
     
-    void convertCloud(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& input_cloud, const std::vector<pcl::PointIndices>& indices, const pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& output_cloud)
+    void convertCloud(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& input_cloud, const std::vector<pcl::PointIndices>& indices, const pcl::PointCloud<pcl::PointXYZRGBA>::Ptr& output_cloud, bool keep_organized)
     { 
-//         output_cloud->width=1;
-//         for(int j=0; j<indices.size(); j++)
-//         {
-//             int oldH = output_cloud ->height;
-//             output_cloud ->height = output_cloud->height + indices[j].indices.size();
-//             output_cloud->points.resize( output_cloud->points.size() + indices[j].indices.size());
-//             
-//             for(int i=0; i<indices[j].indices.size(); i++)
-//             {   
-//                 output_cloud->points[oldH + i].x = input_cloud->points[indices[j].indices[i]].x;
-//                 output_cloud->points[oldH + i].y = input_cloud->points[indices[j].indices[i]].y;
-//                 output_cloud->points[oldH + i].z = input_cloud->points[indices[j].indices[i]].z;
-// 
-//                 output_cloud->points[oldH + i].r = input_cloud->points[indices[j].indices[i]].r;
-//                 output_cloud->points[oldH + i].g = input_cloud->points[indices[j].indices[i]].g;
-//                 output_cloud->points[oldH + i].b = input_cloud->points[indices[j].indices[i]].b;
-//                 output_cloud->points[oldH + i].rgb = input_cloud->points[indices[j].indices[i]].rgb;
-//             }
-//         }
-        
-        output_cloud->height=1;
-        for(int j=0; j<indices.size(); j++)
+        if(keep_organized)
         {
-            int oldW = output_cloud->width;
-            output_cloud ->width = output_cloud->width + indices[j].indices.size();
-            output_cloud->points.resize( output_cloud->points.size() + indices[j].indices.size());
+            output_cloud->height = input_cloud -> height;
+            output_cloud->width = input_cloud -> width;
+            output_cloud->points.resize(input_cloud ->height * input_cloud->width);
             
-            for(int i=0; i<indices[j].indices.size(); i++)
-            {   
-                output_cloud->points[oldW + i].x = input_cloud->points[indices[j].indices[i]].x;
-                output_cloud->points[oldW + i].y = input_cloud->points[indices[j].indices[i]].y;
-                output_cloud->points[oldW + i].z = input_cloud->points[indices[j].indices[i]].z;
+            for(int j=0; j<indices.size(); j++)
+            {
+                for(int i=0; i<indices[j].indices.size(); i++)
+                {   
+                    output_cloud->points[indices[j].indices[i]].x = input_cloud->points[indices[j].indices[i]].x;
+                    output_cloud->points[indices[j].indices[i]].y = input_cloud->points[indices[j].indices[i]].y;
+                    output_cloud->points[indices[j].indices[i]].z = input_cloud->points[indices[j].indices[i]].z;
+                    
+                    output_cloud->points[indices[j].indices[i]].r = input_cloud->points[indices[j].indices[i]].r;
+                    output_cloud->points[indices[j].indices[i]].g = input_cloud->points[indices[j].indices[i]].g;
+                    output_cloud->points[indices[j].indices[i]].b = input_cloud->points[indices[j].indices[i]].b;
+                    output_cloud->points[indices[j].indices[i]].rgb = input_cloud->points[indices[j].indices[i]].rgb;
+                }
+            }
+        }else{
+            output_cloud->height=1;
+            for(int j=0; j<indices.size(); j++)
+            {
+                int oldW = output_cloud->width;
+                output_cloud ->width = output_cloud->width + indices[j].indices.size();
+                output_cloud->points.resize( output_cloud->points.size() + indices[j].indices.size());
+                
+                for(int i=0; i<indices[j].indices.size(); i++)
+                {   
+                    output_cloud->points[oldW + i].x = input_cloud->points[indices[j].indices[i]].x;
+                    output_cloud->points[oldW + i].y = input_cloud->points[indices[j].indices[i]].y;
+                    output_cloud->points[oldW + i].z = input_cloud->points[indices[j].indices[i]].z;
 
-                output_cloud->points[oldW + i].r = input_cloud->points[indices[j].indices[i]].r;
-                output_cloud->points[oldW + i].g = input_cloud->points[indices[j].indices[i]].g;
-                output_cloud->points[oldW + i].b = input_cloud->points[indices[j].indices[i]].b;
-                output_cloud->points[oldW + i].rgb = input_cloud->points[indices[j].indices[i]].rgb;
+                    output_cloud->points[oldW + i].r = input_cloud->points[indices[j].indices[i]].r;
+                    output_cloud->points[oldW + i].g = input_cloud->points[indices[j].indices[i]].g;
+                    output_cloud->points[oldW + i].b = input_cloud->points[indices[j].indices[i]].b;
+                    output_cloud->points[oldW + i].rgb = input_cloud->points[indices[j].indices[i]].rgb;
+                }
             }
         }
     }
