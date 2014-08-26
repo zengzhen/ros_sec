@@ -10,6 +10,17 @@
 #include "ros_sec/typeDef.h"
 #include <pcl/registration/icp.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/registration/registration.h>
+#include <pcl/features/normal_3d_omp.h>
+#include <pcl/features/fpfh_omp.h>
+#include <pcl/registration/sample_consensus_prerejective.h>
+#include <Eigen/Core>
+
+typedef pcl::PointNormal PointNT;
+typedef pcl::PointCloud<PointNT> PointCloudT;
+typedef pcl::FPFHSignature33 FeatureT;
+typedef pcl::FPFHEstimationOMP<pcl::PointXYZRGB,PointNT,FeatureT> FeatureEstimationT;
+typedef pcl::PointCloud<FeatureT> FeatureCloudT;
 
 namespace TableObject{
     
@@ -25,11 +36,33 @@ namespace TableObject{
         */
         void init(CloudPtr cloud, const std::vector<pcl::PointIndices>& clusters);
         
-        /** Tracking using whole newly arrived cloud (without segmented clusters)
+        /** \brief initiazlier
+        *  \param[in] cloud initial cloud (1st frame)
+        *  \param[in] clusters initial clusteres (1st frame)
+        *  \param[in] clusters_color initial clusteres (1st frame)
+        */
+        void init(CloudPtr cloud, const std::vector<pcl::PointIndices>& clusters, std::vector<RefPointType> clusters_color);
+        
+        /** Tracking using whole newly arrived cloud (without segmented clusters) using icp
+         *  \param[in] inputCloud newly arrived point cloud frame
+         *  \param[out] tracked_clusters indicies of tracked rigid transformed clusters(objects)
+         */
+        void track_icp(CloudPtr inputCloud, std::vector<pcl::PointIndices>& tracked_clusters);
+        
+        /** Tracking using whole newly arrived cloud (without segmented clusters) using rigid alignment
+         *  http://pointclouds.org/documentation/tutorials/alignment_prerejective.php
          *  \param[in] inputCloud newly arrived point cloud frame
          *  \param[out] tracked_clusters indicies of tracked rigid transformed clusters(objects)
          */
         void track(CloudPtr inputCloud, std::vector<pcl::PointIndices>& tracked_clusters);
+        
+        /** Tracking using whole newly arrived cloud (without segmented clusters) using rigid alignment
+         *  http://pointclouds.org/documentation/tutorials/alignment_prerejective.php
+         *  \param[in] inputCloud newly arrived point cloud frame
+         *  \param[in] bool save input, target clouds
+         *  \param[out] tracked_clusters indicies of tracked rigid transformed clusters(objects)
+         */
+        void track_debug(CloudPtr inputCloud, std::vector<pcl::PointIndices>& tracked_clusters, bool save);
         
         /** link previous frame cloud to current frame cloud
          *  \param[in] inputCloud current frame cloud
@@ -45,6 +78,8 @@ namespace TableObject{
         
         void getTransformedCloud(std::vector<pcl::PointCloud<pcl::PointXYZRGB>::Ptr>& transformed_cloud);
         
+        void getFinalTransformation(Eigen::Matrix4f & transformation);
+        
         void getTestClusters(std::vector<pcl::PointIndices>& clusters);
         
         void viewTranformedCloud(pcl::visualization::PCLVisualizer& viewer, int cluster_id);
@@ -59,6 +94,9 @@ namespace TableObject{
          
         std::vector<pcl::PointCloud<pcl::PointXYZRGB>::Ptr> _transformed_cloud; //transformed previous frame cloud to align with current frame cloud in format PointXYZ
         
+        Eigen::Matrix4f _final_transformation;
+        
+        std::vector<RefPointType> _clusters_color;
     };
     
 }
