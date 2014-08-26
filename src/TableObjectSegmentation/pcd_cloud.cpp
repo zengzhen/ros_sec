@@ -122,7 +122,7 @@ namespace TableObject{
         if(!_reservedIndices->empty())
             pass.setIndices(_reservedIndices);
         pass.setFilterFieldName ("z");
-        pass.setFilterLimits (0.0, 3.0);
+        pass.setFilterLimits (0.2, 1.5);
         pass.setKeepOrganized(true);
         pass.filter (*_cloud);
         
