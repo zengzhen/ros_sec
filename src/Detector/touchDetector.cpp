@@ -13,6 +13,15 @@ namespace TableObject{
     
     bool touchDetector::detect(const CloudPtr& cloud_1, const CloudPtr& cloud_2)
     {
+        if(cloud_1->isOrganized()){
+            std::cerr << "cloud_1 is organized, needs input unorganized cloud\n";
+            exit(1);
+        }
+        if(cloud_2->isOrganized()){
+            std::cerr << "cloud_2 is organized, needs input unorganized cloud\n";
+            exit(1);
+        }
+        
         std::vector<float> distance;
         
         // kdtree initialization: k nearest neighbor search
@@ -53,6 +62,11 @@ namespace TableObject{
 
     bool touchDetector::detectTableTouch(const CloudPtr& cloud_1, pcl::ModelCoefficients coefficients)
     {
+        if(cloud_1->isOrganized()){
+            std::cerr << "cloud_1 is organized, needs input unorganized cloud\n";
+            exit(1);
+        }
+        
         std::vector<float> distance;
         pcl::PointXYZ point;
         
@@ -66,7 +80,7 @@ namespace TableObject{
         }
         std::sort(distance.begin(), distance.end()); // from small to large
         std::cout<< "nearest distance = " << distance[0] << std::endl;
-        if(distance[0] <= 0.02)
+        if(distance[0] <= 0.021)
         {
             _touch = true;
             return true;
