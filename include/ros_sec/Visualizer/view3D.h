@@ -25,7 +25,7 @@ namespace TableObject{
         static CloudPtr drawResult (pcl::visualization::PCLVisualizer& viz, TableObject::track3D& tracker);
         
         /** \brief view object clusters with diff random colors*/
-        static void drawClusters(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector<pcl::PointIndices> clusters);
+        static void drawClusters(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector<pcl::PointIndices> clusters, bool showText);
         
         /** \brief add object index notion for each cloud*/
         static void drawText(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector<pcl::PointIndices> clusters);

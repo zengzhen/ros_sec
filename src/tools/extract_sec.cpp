@@ -284,7 +284,7 @@ main (int argc, char** argv)
 //             result_viewer.addPointCloud<RefPointType>(sceneCloud, rgb, "new frame");
             
             // draw extracted object clusters
-            TableObject::view3D::drawClusters(result_viewer, cloud_objects, touch_clusters);  
+            TableObject::view3D::drawClusters(result_viewer, cloud_objects, touch_clusters, false);  
 
             // draw extracted plane points
 //             pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGBA> plane(planeCloud);

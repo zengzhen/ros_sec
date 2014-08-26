@@ -59,7 +59,7 @@ namespace TableObject{
         return result_cloud;
     }
     
-    void view3D::drawClusters(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector< pcl::PointIndices > clusters)
+    void view3D::drawClusters(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector< pcl::PointIndices > clusters, bool showText)
     {
         for (int i = 0; i < clusters.size(); i++) 
         { 
@@ -84,9 +84,12 @@ namespace TableObject{
                 viz.addPointCloud(cluster_i, random_color, cluster_id.str ()); 
             }
             
-//             std::stringstream ss; ss << i;
-//             viz.removeText3D(ss.str());
-//             viz.addText3D(ss.str(), cloud->points.at(clusters[i].indices[0]),0.1);
+            if(showText)
+            {
+                std::stringstream ss; ss << i;
+                viz.removeText3D(ss.str());
+                viz.addText3D(ss.str(), cloud->points.at(clusters[i].indices[0]),0.1);
+            }
         } 
     }
 
