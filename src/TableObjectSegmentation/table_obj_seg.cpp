@@ -13,11 +13,6 @@
 // #include <pcl/common/centroid.h>
 #include "ros_sec/util/util.h"
 
-#include <time.h>
-
-bool TIMING = true;
-
-
 bool compareClusterSize(const pcl::PointIndices& a,const pcl::PointIndices& b)
 {
     return a.indices.size() > b.indices.size();
@@ -73,15 +68,12 @@ namespace TableObject{
             _viewer2D.writeImage("frame.png");
         }
         
-        std::clock_t t;
-        if(TIMING) t = clock();
-        _sceneCloud.filterValid();
-//         _sceneCloud.filterNoise();
-        _sceneCloud.findPlane(0.01);
-        _sceneCloud.getPlaneCoefficients(_coefficients);
-        if(TIMING){
-            t = clock() - t;
-            std::printf("plane segmentation: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
+        {
+            pcl::ScopeTime("Plane segmentation");
+            _sceneCloud.filterValid();
+    //         _sceneCloud.filterNoise();
+            _sceneCloud.findPlane(0.01);
+            _sceneCloud.getPlaneCoefficients(_coefficients);
         }
             
         // extract the inliers of the estimated plane
@@ -127,99 +119,102 @@ namespace TableObject{
     
     void Segmentation::seg(bool view2D)
     {
-        std::clock_t t;
-        if(TIMING) t = clock();
-        _sceneCloud.filterValid();
-//         _sceneCloud.filterNoise();
-        _sceneCloud.findPlane(0.015);
-        _sceneCloud.getPlaneCoefficients(_coefficients);
-        if(TIMING){
-        	t = clock() - t;
-        	std::printf("plane segmentation: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
-        }
+        {
+            pcl::ScopeTime("Plane segmentation");
+            _sceneCloud.filterValid();
+    //         _sceneCloud.filterNoise();
+            _sceneCloud.findPlane(0.015);
+            _sceneCloud.getPlaneCoefficients(_coefficients);
             
-        // extract the inliers of the estimated plane
-        _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
-        if(view2D)
-        {
-            _viewer2D.viewImage(_sceneCloud.getCloud(), "frame");
-            _viewer2D.writeImage("frame.png");
-            _viewer2D.viewImage(_inPlaneCloud, "plane");
-            _viewer2D.writeImage("plane.png");
-            _viewer2D.viewImage(_outPlaneCloud, "out_plane");
-            _viewer2D.writeImage("out_plane.png");
+            // extract the inliers of the estimated plane
+            _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
+            if(view2D)
+            {
+                _viewer2D.viewImage(_sceneCloud.getCloud(), "frame");
+                _viewer2D.writeImage("frame.png");
+                _viewer2D.viewImage(_inPlaneCloud, "plane");
+                _viewer2D.writeImage("plane.png");
+                _viewer2D.viewImage(_outPlaneCloud, "out_plane");
+                _viewer2D.writeImage("out_plane.png");
+            }
+            
+            // filter small groups of points first before region growing
+            pcl::IndicesPtr inliers(new std::vector<int>);
+            _sceneCloud.getPlaneInliers(inliers);
+            TableObject::pcdCloud inPlanePcdCloud(_inPlaneCloud);
+            inPlanePcdCloud.setIndices(inliers);
+    //         inPlanePcdCloud.filterNoise();
+            
+            //region grow
+            inPlanePcdCloud.regionGrow(false);
+            
+            //get largest cluster as table top
+            pcl::PointIndices::Ptr plane_indices(new pcl::PointIndices);
+            _tableTopCloud.reset(new Cloud);
+            inPlanePcdCloud.getMaxCluster(plane_indices, _tableTopCloud);
+            if(view2D)
+            {
+                _viewer2D.viewImage(_tableTopCloud, "tabletop");
+                _viewer2D.writeImage("tabletop.png");
+            }
+            
+            // Create a Convex Hull representation of the projected inliers
+            pcl::ConvexHull<RefPointType> chull;
+            chull.setInputCloud (_tableTopCloud);
+            chull.setIndices(plane_indices);
+            chull.reconstruct (*_cloud_hull);
+            
+            if(VERBOSE)
+            {
+                std::cout << "Convex hull has dimemsion of " << chull.getDimension() << std::endl;
+                std::cout << "Convex hull has " << _cloud_hull->points.size () << " valid data points." << std::endl;
+            }
         }
         
-        // filter small groups of points first before region growing
-        pcl::IndicesPtr inliers(new std::vector<int>);
-        _sceneCloud.getPlaneInliers(inliers);
-        TableObject::pcdCloud inPlanePcdCloud(_inPlaneCloud);
-        inPlanePcdCloud.setIndices(inliers);
-//         inPlanePcdCloud.filterNoise();
-        
-        //region grow
-        inPlanePcdCloud.regionGrow(false);
-        
-        //get largest cluster as table top
-        pcl::PointIndices::Ptr plane_indices(new pcl::PointIndices);
-        _tableTopCloud.reset(new Cloud);
-        inPlanePcdCloud.getMaxCluster(plane_indices, _tableTopCloud);
-        if(view2D)
         {
-            _viewer2D.viewImage(_tableTopCloud, "tabletop");
-            _viewer2D.writeImage("tabletop.png");
-        }
-        
-        // Create a Convex Hull representation of the projected inliers
-        pcl::ConvexHull<RefPointType> chull;
-        chull.setInputCloud (_tableTopCloud);
-        chull.setIndices(plane_indices);
-        chull.reconstruct (*_cloud_hull);
-        
-        if(VERBOSE)
-        {
-            std::cout << "Convex hull has dimemsion of " << chull.getDimension() << std::endl;
-            std::cout << "Convex hull has " << _cloud_hull->points.size () << " valid data points." << std::endl;
-        }
-        
-        // get point clouds within planar prism
-        pcl::ExtractPolygonalPrismData<RefPointType> prism;
-        prism.setInputCloud(_outPlaneCloud);
-        prism.setInputPlanarHull(_cloud_hull);
-        prism.setHeightLimits(0, 0.5);
-        pcl::PointIndices::Ptr output (new pcl::PointIndices);
-        prism.segment(*output);
-        
-        // extract object clouds
-        pcl::ExtractIndices<RefPointType> extract;
-        extract.setInputCloud (_outPlaneCloud);
-        extract.setIndices (output);
-        extract.setKeepOrganized(true);
-        extract.setNegative (false);
-        extract.filter (*_cloud_objects);
-        
-        if(VERBOSE) std::cout << "Objects point cloud has: " << output->indices.size () << " valid data points." << std::endl;
-        
-        if(view2D)
-        {
-            _viewer2D.viewImage(_cloud_objects, "objects");
-            _viewer2D.writeImage("objects.png");	
-        }
-        
-        //filter noise in extracted _cloud_objects
-        TableObject::pcdCloud objectsPcdCloud(_cloud_objects);
-        objectsPcdCloud.setIndices(*output);
-        objectsPcdCloud.filterNoise();
-        objectsPcdCloud.regionGrow(false);
-        objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
-//         prune();
-        
-        std::sort(_clusters.begin(), _clusters.end(), compareClusterSize);
-        
-        if(VERBOSE)
-        {
-            for(int i=0;i<_clusters.size();i++)
-                std::cout << "cluster[" << i << "] has " << _clusters[i].indices.size() << " points\n";
+            pcl::ScopeTime("Object extraction & clustering");
+            // get point clouds within planar prism
+            pcl::ExtractPolygonalPrismData<RefPointType> prism;
+            prism.setInputCloud(_outPlaneCloud);
+    //         prism.setInputCloud(_sceneCloud.getCloud());;
+            prism.setInputPlanarHull(_cloud_hull);
+            prism.setHeightLimits(0, 0.5);
+    //         prism.setHeightLimits(0.015,0.5);
+            pcl::PointIndices::Ptr output (new pcl::PointIndices);
+            prism.segment(*output);
+            
+            // extract object clouds
+            pcl::ExtractIndices<RefPointType> extract;
+            extract.setInputCloud (_outPlaneCloud);
+    //         extract.setInputCloud(_sceneCloud.getCloud());
+            extract.setIndices (output);
+            extract.setKeepOrganized(true);
+            extract.setNegative (false);
+            extract.filter (*_cloud_objects);
+            
+            if(VERBOSE) std::cout << "Objects point cloud has: " << output->indices.size () << " valid data points." << std::endl;
+            
+            if(view2D)
+            {
+                _viewer2D.viewImage(_cloud_objects, "objects");
+                _viewer2D.writeImage("objects.png");	
+            }
+            
+            //filter noise in extracted _cloud_objects
+            TableObject::pcdCloud objectsPcdCloud(_cloud_objects);
+            objectsPcdCloud.setIndices(*output);
+            objectsPcdCloud.filterNoise();
+            objectsPcdCloud.regionGrow(false);
+            objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
+    //         prune();
+            
+            std::sort(_clusters.begin(), _clusters.end(), compareClusterSize);
+            
+            if(VERBOSE)
+            {
+                for(int i=0;i<_clusters.size();i++)
+                    std::cout << "cluster[" << i << "] has " << _clusters[i].indices.size() << " points\n";
+            }
         }
     }
     
@@ -227,69 +222,53 @@ namespace TableObject{
     {
         _cloud_hull=cloud_hull;
         
-        std::clock_t t;
-        if(TIMING) t=std::clock();
 //         _sceneCloud.filterValid();
 //         _sceneCloud.filterNoise();
 //         _sceneCloud.findPlane(0.005);
-        if(TIMING){
-        	t = clock() - t;
-        	std::printf("plane segmentation: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
-        }
             
-        if(TIMING) t = std::clock();
         // extract the inliers of the estimated plane
 //         _sceneCloud.extractPlane(_inPlaneCloud, _outPlaneCloud);
-        if(view2D)
-            _viewer2D.viewImage(_inPlaneCloud, "plane");
+//         if(view2D)
+//             _viewer2D.viewImage(_inPlaneCloud, "plane");
         
-        // get point clouds within planar prism
-        pcl::ExtractPolygonalPrismData<RefPointType> prism;
-//         prism.setInputCloud(_outPlaneCloud);
-        prism.setInputCloud(_sceneCloud.getCloud());
-        prism.setInputPlanarHull(_cloud_hull);
-        prism.setHeightLimits(0.005, 0.5);
-        pcl::PointIndices::Ptr output (new pcl::PointIndices);
-        prism.segment(*output);
-        
-        // extract object clouds
-        pcl::ExtractIndices<RefPointType> extract;
-//         extract.setInputCloud (_outPlaneCloud);
-        extract.setInputCloud(_sceneCloud.getCloud());
-        extract.setIndices (output);
-        extract.setKeepOrganized(true);
-        extract.setNegative (false);
-        extract.filter (*_cloud_objects);
-        
-        if(TIMING){
-        	t = clock() - t;
-        	std::printf("extracting object points: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
-        }
-
-        if(VERBOSE) std::cout << "Objects point cloud has: " << output->indices.size () << " valid data points." << std::endl;
-        
-        if(view2D)
-            _viewer2D.viewImage(_cloud_objects, "objects");
-        
-        if(TIMING) t = std::clock();
-        //filter noise in extracted _cloud_objects
-        TableObject::pcdCloud objectsPcdCloud(_cloud_objects);
-        objectsPcdCloud.setIndices(*output);
-        objectsPcdCloud.filterNoise();
-        objectsPcdCloud.regionGrow(true);
-        objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
-        
-        std::sort(_clusters.begin(), _clusters.end(), compareClusterSize);
-        
-        if(TIMING){
-        	t = clock() - t;
-        	std::printf("object clustering: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
-        }
-        
-        if(VERBOSE)
         {
-            for(int i=0;i<_clusters.size();i++)
-                std::cout << "cluster[" << i << "] has " << _clusters[i].indices.size() << " points\n";
+            pcl::ScopeTime("Object clustering");
+            // get point clouds within planar prism
+            pcl::ExtractPolygonalPrismData<RefPointType> prism;
+    //         prism.setInputCloud(_outPlaneCloud);
+            prism.setInputCloud(_sceneCloud.getCloud());
+            prism.setInputPlanarHull(_cloud_hull);
+            prism.setHeightLimits(0.005, 0.5);
+            pcl::PointIndices::Ptr output (new pcl::PointIndices);
+            prism.segment(*output);
+            
+            // extract object clouds
+            pcl::ExtractIndices<RefPointType> extract;
+    //         extract.setInputCloud (_outPlaneCloud);
+            extract.setInputCloud(_sceneCloud.getCloud());
+            extract.setIndices (output);
+            extract.setKeepOrganized(true);
+            extract.setNegative (false);
+            extract.filter (*_cloud_objects);
+            
+            if(VERBOSE) std::cout << "Objects point cloud has: " << output->indices.size () << " valid data points." << std::endl;
+            
+            if(view2D) _viewer2D.viewImage(_cloud_objects, "objects");
+            
+            //filter noise in extracted _cloud_objects
+            TableObject::pcdCloud objectsPcdCloud(_cloud_objects);
+            objectsPcdCloud.setIndices(*output);
+            objectsPcdCloud.filterNoise();
+            objectsPcdCloud.regionGrow(true);
+            objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
+            
+            std::sort(_clusters.begin(), _clusters.end(), compareClusterSize);
+                    
+            if(VERBOSE)
+            {
+                for(int i=0;i<_clusters.size();i++)
+                    std::cout << "cluster[" << i << "] has " << _clusters[i].indices.size() << " points\n";
+            }
         }
     }
     
