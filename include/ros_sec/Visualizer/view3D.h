@@ -12,23 +12,27 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include "ros_sec/Tracker/track3D.h"
 
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
 namespace TableObject{
     
     class view3D {
-    public:
-        /** \brief view 3D particles
-         */
-//         static bool drawParticles (pcl::visualization::PCLVisualizer& viz, TableObject::track3D& tracker);
-        
-        /** \brief view tracked 3D object
-         */
-        static CloudPtr drawResult (pcl::visualization::PCLVisualizer& viz, TableObject::track3D& tracker);
+    public:       
         
         /** \brief view object clusters with diff random colors*/
         static void drawClusters(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector<pcl::PointIndices> clusters, bool showText);
         
         /** \brief add object index notion for each cloud*/
         static void drawText(pcl::visualization::PCLVisualizer& viz, CloudPtr cloud, std::vector<pcl::PointIndices> clusters);
+                
+        /** \brief draw arrow based on given point, orientation and transformation
+         * \param[in] viz
+         *  \param[in] point 
+         *  \param[in] orientation
+         *  \param[in] transformation
+         */
+        static void drawArrow(pcl::visualization::PCLVisualizer& viz, pcl::PointXYZ point, Eigen::Vector3f orientation, std::string id);
     };
     
 }
