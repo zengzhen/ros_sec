@@ -17,15 +17,21 @@ namespace TableObject{
         _nest.setRadiusSearch (0.01);
     }
     
-    void track3D::setTarget(CloudConstPtr target, pcl::PointXYZ center)
+    void track3D::setTarget(CloudConstPtr target, RefPointType center)
     {
-        _center=center;
-        if(!_use_normal)
-            _target=target;
-        else{
-            // Estimate normals for cloud
-            _nest.setInputCloud (target);
-            _nest.compute (*_targetWN);
+        if(target->isOrganized())
+        {
+            std::cerr << "track3D expects unorganized cloud\n";
+            exit(1);
+        }else{
+            _center=center;
+            if(!_use_normal)
+                _target=target;
+            else{
+                // Estimate normals for cloud
+                _nest.setInputCloud (target);
+                _nest.compute (*_targetWN);
+            }
         }
     }
 
@@ -47,6 +53,7 @@ namespace TableObject{
             
             pcl::tracking::ParticleXYZRPY result = _tracker->getResult ();
             _transformation = _tracker->toEigenMatrix (result);
+            std::cout << "tracker best particle: " << result << std::endl;
             
             pcl::transformPointCloud<RefPointType> (*(_tracker->getReferenceCloud ()), *_tracked_cloud, _transformation);
         }else{
