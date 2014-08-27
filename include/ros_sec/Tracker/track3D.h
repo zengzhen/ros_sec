@@ -56,13 +56,7 @@ namespace TableObject{
          *  \param[in] target reference cloud for tracking
          *  \param[in] center fitted cylinder center of target cloud
          */ 
-        void setTarget(CloudConstPtr target, pcl::PointXYZ center);
-        
-        /** Set target before initialize
-         *  \param[in] target reference cloud for tracking (with normal field)
-         *  \param[in] center fitted cylinder center of target cloud
-         */
-        void setTarget(const pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr target, pcl::PointXYZ center);
+        void setTarget(CloudConstPtr target, RefPointType center);
         
         /** Set parameters
          * eg, noise level, particle bins, coherence object for tracking, prepare object for tracking
@@ -122,7 +116,7 @@ namespace TableObject{
         bool _new_cloud;
         Eigen::Affine3f _transformation;
         
-        pcl::PointXYZ _center;
+        RefPointType _center;
         Eigen::Vector3f _offset;
         
         bool _use_normal;
