@@ -147,6 +147,7 @@ add_library(table_obj_seg src/TableObjectSegmentation/table_obj_seg.cpp)
 add_library(touchDetector src/Detector/touchDetector.cpp)
 add_library(colorDetector src/Detector/colorDetector.cpp)
 add_library(moveDetector src/Detector/moveDetector.cpp)
+add_library(bottleDetector src/Detector/bottleDetector.cpp)
 
 add_library(view2D src/Visualizer/view2D.cpp)
 add_library(view3D src/Visualizer/view3D.cpp)
@@ -193,6 +194,11 @@ target_link_libraries(
 target_link_libraries(
     moveDetector
     util
+)
+
+target_link_libraries(
+    bottleDetector
+    ${PCL_LIBRARIES}
 )
 
 target_link_libraries(
