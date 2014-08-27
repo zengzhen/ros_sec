@@ -36,15 +36,7 @@ namespace TableObject{
             exit(1);
         } else
         {
-            std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
-            //downsample the point cloud
-            std::clock_t t = std::clock();
-            pcl::VoxelGrid<RefPointType> sampler;
-            sampler.setInputCloud(_cloud);
-            sampler.setLeafSize(0.005f, 0.005f, 0.005f);
-            sampler.filter(*_cloud);
-            std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
-            t = std::clock() - t;
+//             std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
         }
     }
     
@@ -55,7 +47,7 @@ namespace TableObject{
     _planeInliers(new std::vector<int>),
     _coefficients(new pcl::ModelCoefficients)
     {
-        std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+//         std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
     }
     
     void pcdCloud::resetCloud(const std::string& pcd_file, bool downsample)
@@ -66,7 +58,7 @@ namespace TableObject{
             exit(1);
         } else
         {
-            std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+//             std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
             if(downsample) 
             {
                 //downsample the point cloud
@@ -76,7 +68,7 @@ namespace TableObject{
                 sampler.setLeafSize(0.0001f, 0.0001f, 0.0001f);
                 sampler.filter(*_cloud);
                 
-                std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
+//                 std::cout << "point cloud: width = " << _cloud->width << "; height = " << _cloud->height << "; totoal = " << _cloud->width*_cloud->height << std::endl;
                 t = std::clock() - t;
                 std::printf("downsample cloud: %f seconds\n", ((float)t)/CLOCKS_PER_SEC);
             }
