@@ -69,7 +69,7 @@ namespace TableObject{
         }
         
         {
-            pcl::ScopeTime("Plane segmentation");
+            pcl::ScopeTime t1("Plane segmentation");
             _sceneCloud.filterValid();
     //         _sceneCloud.filterNoise();
             _sceneCloud.findPlane(0.01);
@@ -120,7 +120,7 @@ namespace TableObject{
     void Segmentation::seg(bool view2D)
     {
         {
-            pcl::ScopeTime("Plane segmentation");
+            pcl::ScopeTime t1("Plane segmentation");
             _sceneCloud.filterValid();
     //         _sceneCloud.filterNoise();
             _sceneCloud.findPlane(0.015);
@@ -172,7 +172,7 @@ namespace TableObject{
         }
         
         {
-            pcl::ScopeTime("Object extraction & clustering");
+            pcl::ScopeTime t2("Object extraction & clustering");
             // get point clouds within planar prism
             pcl::ExtractPolygonalPrismData<RefPointType> prism;
             prism.setInputCloud(_outPlaneCloud);
@@ -232,7 +232,7 @@ namespace TableObject{
 //             _viewer2D.viewImage(_inPlaneCloud, "plane");
         
         {
-            pcl::ScopeTime("Object clustering");
+            pcl::ScopeTime t1("Object clustering");
             // get point clouds within planar prism
             pcl::ExtractPolygonalPrismData<RefPointType> prism;
     //         prism.setInputCloud(_outPlaneCloud);
